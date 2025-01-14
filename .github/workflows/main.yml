@@ -1,0 +1,33 @@
+name: Daily News Digest Workflow
+
+on:
+  schedule:
+    - cron: '0 12 * * *'  # Runs at 12 PM UTC daily, equivalent to 7 AM EST
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+jobs:
+  fetch_and_send_news:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        pip install requests python-dotenv
+
+    - name: Set Environment Variables
+      run: |
+        echo "BASE_URL=${{ secrets.BASE_URL }}" >> $GITHUB_ENV
+        echo "NEWS_API_KEY=${{ secrets.NEWS_API_KEY }}" >> $GITHUB_ENV
+        echo "EMAIL=${{ secrets.EMAIL }}" >> $GITHUB_ENV
+        echo "EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}" >> $GITHUB_ENV
+        echo "RECEIVER_EMAIL=${{ secrets.RECEIVER_EMAIL }}" >> $GITHUB_ENV
+
+    - name: Run script
+      run: main.py
