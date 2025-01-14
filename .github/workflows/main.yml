@@ -31,4 +31,4 @@ jobs:
         echo "RECEIVER_EMAIL=${{ secrets.RECEIVER_EMAIL }}" >> $GITHUB_ENV
 
     - name: Run script
-      run: python your_script.py
+      run: python main.py
