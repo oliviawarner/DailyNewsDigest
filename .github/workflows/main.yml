@@ -2,12 +2,14 @@ name: Daily News Digest Workflow
 
 on:
   schedule:
-    - cron: '0 12 * * *'  # Runs at 12 PM UTC daily, equivalent to 7 AM EST
+    - cron: '0 12 * * *'  # Runs at 12 PM UTC daily (7 AM EST)
   workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   fetch_and_send_news:
     runs-on: ubuntu-latest
+    env:
+      BASE_URL: https://newsapi.org/v2/top-headlines?country=us
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -21,13 +23,12 @@ jobs:
       run: |
         pip install requests python-dotenv
 
-    - name: Set Environment Variables
+    - name: Set Environment Variables from Secrets
       run: |
-        echo "BASE_URL=${{ secrets.BASE_URL }}" >> $GITHUB_ENV
         echo "NEWS_API_KEY=${{ secrets.NEWS_API_KEY }}" >> $GITHUB_ENV
         echo "EMAIL=${{ secrets.EMAIL }}" >> $GITHUB_ENV
         echo "EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}" >> $GITHUB_ENV
         echo "RECEIVER_EMAIL=${{ secrets.RECEIVER_EMAIL }}" >> $GITHUB_ENV
 
     - name: Run script
-      run: main.py
+      run: python your_script.py
